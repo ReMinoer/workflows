@@ -52,11 +52,11 @@ jobs:
     - name: Zip
       uses: thedoctor0/zip-release@master
       with:
-        filename: '${{ inputs.zip_prefix }}-${{ runner.os }}.zip'
+        filename: '${{ inputs.zip_prefix }}-${{ runner.os }}-${{ steps.tag.outputs.tag }}.zip'
         directory: '${{ env.PUBLISH_FOLDER }}'
     - name: Release
       uses: alexellis/upload-assets@0.3.0
       with:
-        asset_paths: '["${{ env.PUBLISH_FOLDER }}/${{ inputs.zip_prefix }}-${{ runner.os }}.zip"]'
+        asset_paths: '["${{ env.PUBLISH_FOLDER }}/${{ inputs.zip_prefix }}-${{ runner.os }}-${{ steps.tag.outputs.tag }}.zip"]'
       env:
         GITHUB_TOKEN: ${{ github.token }}
