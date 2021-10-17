@@ -24,6 +24,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Parse Tag
       uses: dawidd6/action-get-tag@v1
       id: tag
