@@ -25,7 +25,5 @@ jobs:
       run: dotnet build --no-restore $DOTNET_ARGUMENTS
     - name: Test
       run: dotnet test --no-build $DOTNET_ARGUMENTS
-    - name: Publish
-      run: dotnet publish --no-build $DOTNET_ARGUMENTS
     - name: Pack
       run: dotnet pack --no-build $DOTNET_ARGUMENTS

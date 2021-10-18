@@ -48,7 +48,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build $DOTNET_ARGUMENTS
     - name: Publish
-      run: dotnet publish --no-build $DOTNET_ARGUMENTS
+      run: dotnet publish ${{ inputs.project_folder }} -f ${{ inputs.target_framework }} --no-build $DOTNET_ARGUMENTS
     - name: Zip
       uses: thedoctor0/zip-release@master
       with:
