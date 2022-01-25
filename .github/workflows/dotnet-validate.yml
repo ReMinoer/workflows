@@ -1,10 +1,19 @@
 name: dotnet / Validate
 on:
   workflow_call:
+    inputs:
+      os:
+        required: false
+        type: string
+        default: ubuntu-latest
+      solution_file:
+        required: false
+        type: string
+        default: ''
 jobs:
   validate:
     name: Validate
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     strategy:
       matrix:
         configuration: [Debug, Release]
@@ -22,8 +31,8 @@ jobs:
     - name: Restore
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore $DOTNET_ARGUMENTS
+      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS
     - name: Test
-      run: dotnet test --no-build $DOTNET_ARGUMENTS
+      run: dotnet test ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS
     - name: Pack
-      run: dotnet pack --no-build $DOTNET_ARGUMENTS
+      run: dotnet pack ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS

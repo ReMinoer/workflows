@@ -2,6 +2,10 @@ name: dotnet / Release
 on:
   workflow_call:
     inputs:
+      solution_file:
+        required: false
+        type: string
+        default: ''
       project_folder:
         required: true
         type: string
@@ -44,9 +48,9 @@ jobs:
     - name: Restore
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore $DOTNET_ARGUMENTS -p:Version=${{ steps.tag.outputs.tag }}
+      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS -p:Version=${{ steps.tag.outputs.tag }}
     - name: Test
-      run: dotnet test --no-build $DOTNET_ARGUMENTS
+      run: dotnet test ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS
     - name: Publish
       run: dotnet publish ${{ inputs.project_folder }} -f ${{ inputs.target_framework }} --no-build $DOTNET_ARGUMENTS
     - name: Zip
