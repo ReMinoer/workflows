@@ -16,7 +16,6 @@ jobs:
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
-      DOTNET_ARGUMENTS: --nologo -c ${{ matrix.configuration }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -29,8 +28,8 @@ jobs:
     - name: Restore
       run: dotnet restore ${{ inputs.solution_file }}
     - name: Build
-      run: msbuild ${{ inputs.solution_file }} /t:Build /p:Configuration=${{ matrix.configuration }} /nologo /v:minimal 
+      run: msbuild ${{ inputs.solution_file }} -t:Build -p:Configuration=${{ matrix.configuration }} -v:minimal -nologo
       env: 
         DeployExtension: False
     - name: Test
-      run: dotnet test ${{ inputs.solution_file }} --no-build $env:DOTNET_ARGUMENTS
+      run: dotnet test ${{ inputs.solution_file }} -c ${{ matrix.configuration }} --nologo 
