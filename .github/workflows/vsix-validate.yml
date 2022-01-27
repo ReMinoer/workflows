@@ -28,7 +28,7 @@ jobs:
     - name: Install dotnet
       uses: actions/setup-dotnet@v1
     - name: Restore
-      run: dotnet restore
+      run: dotnet restore ${{ inputs.solution_file }}
     - name: Build
       run: msbuild ${{ inputs.solution_file }} -t:Build $MSBUILD_ARGUMENTS
       env: 

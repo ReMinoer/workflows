@@ -40,7 +40,7 @@ jobs:
     - name: Install dotnet
       uses: actions/setup-dotnet@v1
     - name: Restore
-      run: dotnet restore
+      run: dotnet restore ${{ inputs.solution_file }}
     - name: Build
       run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS -p:Version=${{ steps.tag.outputs.tag }}
     - name: Test
