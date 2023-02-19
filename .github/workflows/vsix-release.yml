@@ -16,6 +16,10 @@ on:
         required: false
         type: string
         default: Release
+      dotnet_version:
+        required: false
+        type: string
+        default: ''
 jobs:
   release:
     name: Release
@@ -34,7 +38,9 @@ jobs:
     - name: Install MSBuild
       uses: microsoft/setup-msbuild@v1
     - name: Install dotnet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ inputs.dotnet_version }}
     - name: Restore
       run: dotnet restore ${{ inputs.solution_file }}
     - name: Set Version
