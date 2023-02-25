@@ -30,7 +30,5 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ inputs.dotnet_version }}
-    - name: Restore
-      run: msbuild ${{ inputs.solution_file }} -t:Restore -p:Configuration=${{ matrix.configuration }} -v:minimal -nologo
     - name: Build
-      run: msbuild ${{ inputs.solution_file }} -t:Build -p:Configuration=${{ matrix.configuration }} -v:minimal -nologo
+      run: devenv ${{ inputs.solution_file }} /Build ${{ matrix.configuration }}
