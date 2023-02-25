@@ -32,7 +32,7 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: true
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
     - name: Parse Tag
@@ -47,7 +47,7 @@ jobs:
     - name: Restore
       run: dotnet restore ${{ inputs.solution_file }}
     - name: Set Version
-      uses: cezarypiatek/VsixVersionAction@1.0
+      uses: cezarypiatek/VsixVersionAction@1.1
       with:
         version: ${{ steps.tag.outputs.tag }}
         vsix-manifest-file: ${{ inputs.project_folder }}/source.extension.vsixmanifest
@@ -58,7 +58,7 @@ jobs:
     - name: Test
       run: dotnet test ${{ inputs.solution_file }} -c ${{ inputs.configuration }} --nologo
     - name: Publish
-      uses: cezarypiatek/VsixPublisherAction@0.2
+      uses: cezarypiatek/VsixPublisherAction@1.0
       with:
         extension-file: ${{ inputs.project_folder }}/bin/${{ inputs.configuration }}/${{ inputs.vsix_name }}.vsix
         publish-manifest-file: ${{ inputs.project_folder }}/publishManifest.json
