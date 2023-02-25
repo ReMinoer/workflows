@@ -38,8 +38,9 @@ jobs:
       run: dotnet restore ${{ inputs.core_solution_file }}
     - name: Build
       shell: cmd
-      # Time optimization with /updateconfiguration: https://github.com/actions/runner-images/issues/128
+      # Takes a long time: https://github.com/actions/runner-images/issues/5301
+      # Time optimization with /updateconfiguration ? : https://github.com/actions/runner-images/issues/128
       run: |
-        "${{ steps.msbuild.outputs.msbuildPath }}\..\..\..\Common7\IDE\devenv.com" ${{ inputs.installer_solution_file }} /Build ${{ matrix.configuration }} /updateconfiguration
+        "${{ steps.msbuild.outputs.msbuildPath }}\..\..\..\Common7\IDE\devenv.com" ${{ inputs.installer_solution_file }} /Build ${{ matrix.configuration }}
     - name: Test
       run: dotnet test ${{ inputs.core_solution_file }} -c ${{ matrix.configuration }} --nologo 
