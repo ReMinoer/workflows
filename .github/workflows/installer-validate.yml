@@ -26,9 +26,10 @@ jobs:
         submodules: recursive
     - name: Install MSBuild
       uses: microsoft/setup-msbuild@v1
+      id: msbuild
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ inputs.dotnet_version }}
     - name: Build
-      run: devenv ${{ inputs.solution_file }} /Build ${{ matrix.configuration }}
+      run: ${{ steps.msbuild.outputs.msbuildPath }}\Common7\IDE\devenv.com ${{ inputs.solution_file }} /Build ${{ matrix.configuration }}
