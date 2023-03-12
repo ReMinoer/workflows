@@ -36,6 +36,9 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
+    - name: Parse Tag
+      uses: dawidd6/action-get-tag@v1
+      id: tag
     - name: Setup DevEnv
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
       id: devenv
@@ -48,7 +51,7 @@ jobs:
     - name: Restore
       run: dotnet restore ${{ inputs.solution_file }}
     - name: Build
-      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS
+      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS -p:Version=${{ steps.tag.outputs.tag }}
     - name: Disable Out of Process Building
       # Required to Build VS Installer Projects
       run: .\DisableOutOfProcBuild.exe
