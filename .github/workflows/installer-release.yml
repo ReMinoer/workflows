@@ -1,4 +1,4 @@
-name: Installer / Validate
+name: Installer / Release
 on:
   workflow_call:
     inputs:
@@ -25,7 +25,7 @@ on:
         default: ''
 jobs:
   validate:
-    name: Validate
+    name: Release
     runs-on: windows-latest
     env:
       DOTNET_NOLOGO: true
