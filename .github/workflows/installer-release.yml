@@ -1,0 +1,69 @@
+name: Installer / Validate
+on:
+  workflow_call:
+    inputs:
+      solution_file:
+        required: true
+        type: string
+      project_folder:
+        required: true
+        type: string
+      installer_name:
+        required: true
+        type: string
+      configuration:
+        required: false
+        type: string
+        default: Release
+      installer_configuration_suffix:
+        required: false
+        type: string
+        default: ''
+      dotnet_version:
+        required: false
+        type: string
+        default: ''
+jobs:
+  validate:
+    name: Validate
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_ARGUMENTS: --nologo -c ${{ inputs.configuration }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Setup DevEnv
+      uses: seanmiddleditch/gha-setup-vsdevenv@v4
+      id: devenv
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ inputs.dotnet_version }}
+    - name: Restore
+      run: dotnet restore ${{ inputs.solution_file }}
+    - name: Build
+      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS
+    - name: Disable Out of Process Building
+      # Required to Build VS Installer Projects
+      run: .\DisableOutOfProcBuild.exe
+      working-directory: ${{ steps.devenv.outputs.install_path }}\Common7\IDE\CommonExtensions\Microsoft\VSI\DisableOutOfProcBuild
+    - name: Build Installer
+      shell: cmd
+      # Takes a long time: https://github.com/actions/runner-images/issues/5301
+      # Time optimization with /updateconfiguration ? : https://github.com/actions/runner-images/issues/128
+      run: |
+        "${{ steps.devenv.outputs.install_path }}\Common7\IDE\devenv.com" ${{ inputs.solution_file }} /Build ${{ inputs.configuration }} /Project ${{ inputs.project_folder }}/${{ inputs.installer_name }}.vdproj /ProjectConfig ${{ inputs.configuration }}${{ inputs.installer_configuration_suffix }}
+    - name: Test
+      run: dotnet test ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS
+    - name: Release
+      uses: alexellis/upload-assets@0.4.0
+      with:
+        asset_paths: '["${{ inputs.project_folder }}/${{ inputs.configuration }}${{ inputs.installer_configuration_suffix }}/${{ inputs.installer_name }}.msi"]'
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
