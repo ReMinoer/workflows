@@ -54,6 +54,6 @@ jobs:
       # Takes a long time: https://github.com/actions/runner-images/issues/5301
       # Time optimization with /updateconfiguration ? : https://github.com/actions/runner-images/issues/128
       run: |
-        "${{ steps.devenv.outputs.install_path }}\Common7\IDE\devenv.com" ${{ inputs.installer_project_file }} /Build ${{ matrix.configuration }}${{ inputs.installer_configuration_suffix }}
+        "${{ steps.devenv.outputs.install_path }}\Common7\IDE\devenv.com" ${{ inputs.solution_file }} /Build ${{ matrix.configuration }} /Project ${{ inputs.installer_project_file }} /ProjectConfig ${{ matrix.configuration }}${{ inputs.installer_configuration_suffix }}
     - name: Test
       run: dotnet test ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS
