@@ -2,12 +2,16 @@ name: Installer / Validate
 on:
   workflow_call:
     inputs:
-      core_solution_file:
+      solution_file:
         required: true
         type: string
-      installer_solution_file:
+      installer_project_file:
         required: true
         type: string
+      installer_configuration_suffix:
+        required: false
+        type: string
+        default: ''
       dotnet_version:
         required: false
         type: string
@@ -22,6 +26,7 @@ jobs:
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_ARGUMENTS: --nologo -c ${{ matrix.configuration }}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -39,10 +44,16 @@ jobs:
     - name: Restore
       run: dotnet restore ${{ inputs.core_solution_file }}
     - name: Build
+      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS
+    - name: Disable Out of Process Building
+      # Required to Build VS Installer Projects
+      run: .\DisableOutOfProcBuild.exe
+      working-directory: ${{ steps.devenv.outputs.install_path }}\Common7\IDE\CommonExtensions\Microsoft\VSI\DisableOutOfProcBuild
+    - name: Build Installer
       shell: cmd
       # Takes a long time: https://github.com/actions/runner-images/issues/5301
       # Time optimization with /updateconfiguration ? : https://github.com/actions/runner-images/issues/128
       run: |
-        "${{ steps.devenv.outputs.install_path }}\Common7\IDE\devenv.com" ${{ inputs.installer_solution_file }} /Build ${{ matrix.configuration }}
+        "${{ steps.devenv.outputs.install_path }}\Common7\IDE\devenv.com" ${{ inputs.installer_project_file }} /Build ${{ matrix.configuration }}${{ inputs.installer_configuration_suffix }}
     - name: Test
-      run: dotnet test ${{ inputs.core_solution_file }} -c ${{ matrix.configuration }} --nologo 
+      run: dotnet test ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS
