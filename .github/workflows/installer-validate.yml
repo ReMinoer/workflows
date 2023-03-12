@@ -42,7 +42,7 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet_version }}
     - name: Restore
-      run: dotnet restore ${{ inputs.core_solution_file }}
+      run: dotnet restore ${{ inputs.solution_file }}
     - name: Build
       run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS
     - name: Disable Out of Process Building
