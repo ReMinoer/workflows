@@ -14,6 +14,10 @@ on:
         required: false
         type: string
         default: ''
+      pack:
+        required: false
+        type: boolean
+        default: true
     secrets:
       token:
         required: false
@@ -45,4 +49,5 @@ jobs:
     - name: Test
       run: dotnet test ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS
     - name: Pack
+      if: ${{ inputs.pack }}
       run: dotnet pack ${{ inputs.solution_file }} --no-build $DOTNET_ARGUMENTS
