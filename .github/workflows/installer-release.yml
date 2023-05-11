@@ -61,7 +61,7 @@ jobs:
       run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS -p:Version=${{ steps.tag.outputs.tag }}
     - name: Disable Out of Process Building
       # Required to Build VS Installer Projects
-      run: DisableOutOfProcBuild.exe
+      run: ./DisableOutOfProcBuild.exe
       working-directory: ${{ steps.devenv.outputs.install_path }}\Common7\IDE\CommonExtensions\Microsoft\VSI\DisableOutOfProcBuild
     - name: Build Installer
       shell: cmd
