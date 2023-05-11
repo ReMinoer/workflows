@@ -26,6 +26,9 @@ on:
         required: false
       nuget_token:
         required: true
+defaults:
+  run:
+    shell: bash
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true

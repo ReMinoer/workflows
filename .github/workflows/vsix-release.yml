@@ -23,6 +23,9 @@ on:
     secrets:
       token:
         required: false
+defaults:
+  run:
+    shell: bash
 jobs:
   release:
     name: Release

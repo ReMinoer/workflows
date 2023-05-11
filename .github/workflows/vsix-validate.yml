@@ -13,6 +13,9 @@ on:
     secrets:
       token:
         required: false
+defaults:
+  run:
+    shell: bash
 jobs:
   validate:
     name: Validate
