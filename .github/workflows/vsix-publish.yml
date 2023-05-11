@@ -25,9 +25,6 @@ on:
         required: false
       marketplace_token:
         required: true
-defaults:
-  run:
-    shell: bash
 jobs:
   publish:
     name: Publish
