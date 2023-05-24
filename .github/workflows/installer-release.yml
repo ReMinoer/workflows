@@ -50,8 +50,8 @@ jobs:
       # Set the version directly in the .csproj/.props files so the installer build will know it.
       uses: cschleiden/replace-tokens@v1
       with:
-        tokenPrefix: '<!-- REPLACE WITH '
-        tokenSuffix: ' -->'
+        tokenPrefix: '<!--{'
+        tokenSuffix: '}-->'
         files: '["**/*.csproj", "**/*.props"]'
       env:
         VERSION: <Version>${{ steps.tag.outputs.tag }}</Version>
