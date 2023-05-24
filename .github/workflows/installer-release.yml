@@ -47,7 +47,7 @@ jobs:
       uses: dawidd6/action-get-tag@v1
       id: tag
     - name: Set Version
-      # Set the version directly in the .csproj so the installer build will have it.
+      # Set the version directly in the .csproj/.props files so the installer build will know it.
       uses: cschleiden/replace-tokens@v1
       with:
         tokenPrefix: '<!-- REPLACE WITH '
@@ -55,6 +55,13 @@ jobs:
         files: '["**/*.csproj", "**/*.props"]'
       env:
         VERSION: <Version>${{ steps.tag.outputs.tag }}</Version>
+    - name: Read 
+      id: read
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: src/GitHubTestProject.Tool/GitHubTestProject.Tool.csproj
+    - name: Echo
+      run: echo "${{ steps.read.outputs.content }}"
     - name: Setup DevEnv
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
       id: devenv
