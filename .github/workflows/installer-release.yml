@@ -46,6 +46,13 @@ jobs:
     - name: Parse Tag
       uses: dawidd6/action-get-tag@v1
       id: tag
+    - name: Set Version
+      # Set the version directly in the .csproj so the installer build will have it.
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "<!-- Version -->"
+        replace: "<Version>${{ steps.tag.outputs.tag }}</Version>"
+        include: "**/*.csproj"
     - name: Setup DevEnv
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
       id: devenv
@@ -58,7 +65,7 @@ jobs:
     - name: Restore
       run: dotnet restore ${{ inputs.solution_file }}
     - name: Build
-      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS -p:Version=${{ steps.tag.outputs.tag }}
+      run: dotnet build ${{ inputs.solution_file }} --no-restore $DOTNET_ARGUMENTS
     - name: Disable Out of Process Building
       # Required to Build VS Installer Projects
       run: ./DisableOutOfProcBuild.exe
