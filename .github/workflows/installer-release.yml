@@ -48,11 +48,13 @@ jobs:
       id: tag
     - name: Set Version
       # Set the version directly in the .csproj so the installer build will have it.
-      uses: jacobtomlinson/gha-find-replace@v3
+      uses: cschleiden/replace-tokens@v1
       with:
-        find: "<!-- Version -->"
-        replace: "<Version>${{ steps.tag.outputs.tag }}</Version>"
-        include: "**/*.csproj"
+        tokenPrefix: '<!-- REPLACE WITH '
+        tokenSuffix: ' -->'
+        files: '["**/*.csproj", "**/*.props"]'
+      env:
+        VERSION: <Version>${{ steps.tag.outputs.tag }}</Version>
     - name: Setup DevEnv
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
       id: devenv
